@@ -31,7 +31,7 @@ form.addEventListener('submit', (event) => {
   const amountInput = Number(document.querySelector('[name="amount"]').value);
 
   if (delayInput < 0 || stepInput < 0 || amountInput <= 0) {
-    Notiflix.Notify.failure('Fill in all fields.');
+    Notiflix.Notify.failure('Fill in all fields with valid values.');
     return;
   }
 
