@@ -2,6 +2,7 @@ import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import Notiflix from "notiflix";
 
+
 flatpickr('#datetime-picker', {
   enableTime: true,
   time_24hr: true,
@@ -53,79 +54,70 @@ dateInput.addEventListener('input', () => {
     const minuteDiffer = Math.floor((timeDifference % hour) / minute);
     const secondDiffer = Math.floor((timeDifference % minute) / second);
 
-    days.innerHTML = addLeadingZero(dayDiffer);
-    hours.innerHTML = addLeadingZero(hourDiffer);
-    minutes.innerHTML = addLeadingZero(minuteDiffer);
-    seconds.innerHTML = addLeadingZero(secondDiffer);
+    days.textContent = addLeadingZero(dayDiffer);
+    hours.textContent = addLeadingZero(hourDiffer);
+    minutes.textContent = addLeadingZero(minuteDiffer);
+    seconds.textContent = addLeadingZero(secondDiffer);
   } else {
     btnStart.setAttribute('disabled', true);
-    days.innerHTML = '00';
-    hours.innerHTML = '00';
-    minutes.innerHTML = '00';
-    seconds.innerHTML = '00';
+    days.textContent = '00';
+    hours.textContent = '00';
+    minutes.textContent = '00';
+    seconds.textContent = '00';
   }
 
 });
 
 function dateReverseCounter() {
-  let daysCount = Number(days.innerHTML);
-  let hoursCount = Number(hours.innerHTML);
-  let minutesCount = Number(minutes.innerHTML);
-  let secondsCount = Number(seconds.innerHTML);
+  btnStart.setAttribute('disabled', true);
 
-  if (secondsCount > 0) {
-    secondsCount--;
-    seconds.innerHTML = addLeadingZero(secondsCount);
-    minutes.innerHTML = addLeadingZero(minutesCount);
-    hours.innerHTML = addLeadingZero(hoursCount);
-    days.innerHTML = addLeadingZero(daysCount);
-  } else {
+  let daysCount = Number(days.textContent);
+  let hoursCount = Number(hours.textContent);
+  let minutesCount = Number(minutes.textContent);
+  let secondsCount = Number(seconds.textContent);
+
+  if (secondsCount === 0) {
     secondsCount = 59;
-    seconds.innerHTML = addLeadingZero(secondsCount);
-    minutes.innerHTML = addLeadingZero(minutesCount);
-    hours.innerHTML = addLeadingZero(hoursCount);
-    days.innerHTML = addLeadingZero(daysCount);
-    if (minutesCount > 0) {
-      minutesCount--;
-      minutes.innerHTML = addLeadingZero(minutesCount);
-      hours.innerHTML = addLeadingZero(hoursCount);
-      days.innerHTML = addLeadingZero(daysCount);
-    } else {
+    if (minutesCount === 0) {
       minutesCount = 59;
-      minutes.innerHTML = addLeadingZero(minutesCount);
-      hours.innerHTML = addLeadingZero(hoursCount);
-      days.innerHTML = addLeadingZero(daysCount);
-      if (hoursCount > 0) {
-        hoursCount--;
-        hours.innerHTML = addLeadingZero(hoursCount);
-        days.innerHTML = addLeadingZero(daysCount);
-      } else {
+      if (hoursCount === 0) {
         hoursCount = 23;
-        hours.innerHTML = addLeadingZero(hoursCount);
-        days.innerHTML = addLeadingZero(daysCount);
         if (daysCount > 0) {
           daysCount--;
-          days.innerHTML = addLeadingZero(daysCount);
         } else {
-          days.innerHTML = '00';
-          hours.innerHTML = '00';
-          minutes.innerHTML = '00';
-          seconds.innerHTML = '00';
+          days.textContent = '00';
+          hours.textContent = '00';
+          minutes.textContent = '00';
+          seconds.textContent = '00';
           Notiflix.Notify.success('Timer finished', {
             position: 'right-top',
           });
           clearInterval(timer);
           timerStarted = false;
+          dateInput.removeAttribute('disabled' , true);
+          return;
         }
+      } else {
+        hoursCount--;
       }
+    } else {
+      minutesCount--;
     }
+  } else {
+    secondsCount--;
   }
+  
+  seconds.textContent = addLeadingZero(secondsCount);
+  minutes.textContent = addLeadingZero(minutesCount);
+  hours.textContent = addLeadingZero(hoursCount);
+  days.textContent = addLeadingZero(daysCount);
 }
 
 let timer;
 let timerStarted = false;
 
 btnStart.addEventListener('click', () => {
+  dateInput.setAttribute('disabled', true)
   if (!timerStarted) {
     dateReverseCounter();
     timer = setInterval(dateReverseCounter, 1000);
